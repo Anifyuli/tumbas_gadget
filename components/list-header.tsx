@@ -4,12 +4,15 @@ import {
   View,
   Image,
   Pressable,
-  TouchableOpacity,
   FlatList,
+  TouchableOpacity,
 } from "react-native";
 import React from "react";
 import { Link } from "expo-router";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import {
+  GestureHandlerRootView,
+  NativeViewGestureHandler,
+} from "react-native-gesture-handler";
 import { FontAwesome } from "@expo/vector-icons";
 import { CATEGORIES } from "@/assets/images/categories";
 
@@ -59,29 +62,31 @@ const ListHeader = () => {
       <View style={styles.categoriesContainer}>
         <Text style={styles.categoryText}>Categories</Text>
         <GestureHandlerRootView>
-          <FlatList
-            data={CATEGORIES}
-            renderItem={({ item }) => (
-              <Link
-                asChild
-                href={{
-                  pathname: "/categories/[slug]",
-                  params: { slug: item.slug },
-                }}
-              >
-                <Pressable style={styles.category}>
-                  <Image
-                    source={{ uri: item.imageUrl }}
-                    style={styles.categoryImage}
-                  />
-                  <Text style={styles.categoryText}>{item.name}</Text>
-                </Pressable>
-              </Link>
-            )}
-            keyExtractor={(item) => item.name}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-          ></FlatList>
+          <NativeViewGestureHandler>
+            <FlatList
+              data={CATEGORIES}
+              renderItem={({ item }) => (
+                <Link
+                  asChild
+                  href={{
+                    pathname: "/categories/[slug]",
+                    params: { slug: item.slug },
+                  }}
+                >
+                  <Pressable style={styles.category}>
+                    <Image
+                      source={{ uri: item.imageUrl }}
+                      style={styles.categoryImage}
+                    />
+                    <Text style={styles.categoryText}>{item.name}</Text>
+                  </Pressable>
+                </Link>
+              )}
+              keyExtractor={(item) => item.name}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            />
+          </NativeViewGestureHandler>
         </GestureHandlerRootView>
       </View>
     </View>
@@ -154,7 +159,11 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     marginBottom: 8,
   },
-  categoryText: {},
+  categoryText: {
+    fontWeight: "bold",
+    fontSize: 16,
+    marginVertical: 10,
+  },
   badgeContainer: {
     position: "absolute",
     top: -5,
